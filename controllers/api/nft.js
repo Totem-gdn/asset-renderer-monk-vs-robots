@@ -51,18 +51,19 @@ class NFTController {
 
         .in('-compose', 'Multiply')
         .in(`${folderPath}/${sex}/${type}${str}/${nft.hair_styles}.png`)
-
+        .background('#2a2d33')
         .flatten()
-        .toBuffer((err, buff) => {
-          gm(buff)
-          .transparent('white')
-          // .in('-resize', `${width}x${height}`)
-          .in('-scale', `${percentForScale}%`)
-          .in(type === 'avatar' ? '-flop' : '')
-          .in('-bordercolor', 'none')
-          .in('-border', '10x100')
-          .stream('png').pipe(res)
-        })
+        .stream('png').pipe(res)
+        // .toBuffer((err, buff) => {
+        //   gm(buff)
+        //     .transparent('white')
+        //     // .in('-resize', `${width}x${height}`)
+        //     .in('-scale', `${percentForScale}%`)
+        //     .in(type === 'avatar' ? '-flop' : '')
+        //     .in('-bordercolor', 'none')
+        //     .in('-border', '10x100')
+        //     .stream('png').pipe(res)
+        // })
     
        
       console.log('time2', new Date().getTime());
