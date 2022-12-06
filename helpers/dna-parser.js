@@ -13,10 +13,10 @@ class NFT {
   }
   async get (type, id) {
     try {
-      let defaultJson = totemCommonFiles.monkVsRobotsAvatarFilterJson;
+      let filterJson = type === 'avatar' ? totemCommonFiles.monkVsRobotsAvatarFilterJson : totemCommonFiles.monkVsRobotsItemFilterJson;
       const contractHandler = new ContractHandler(this.ApiURL, this.Contracts[type]);
       const dna = await contractHandler.getDNA(id);
-      const parser = new DNAParser(defaultJson, dna);
+      const parser = new DNAParser(filterJson, dna);
       const properties = parser.getFilterPropertiesList()
       let jsonProp = {...properties};
       let settings = {};
