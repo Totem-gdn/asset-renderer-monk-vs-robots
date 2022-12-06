@@ -25,10 +25,13 @@ class NFTController {
       const type = nft.body_type === 0 ? 'Fat' : 'Skinny';
       const str = nft.body_strength === 0 ? '_buff' : '';
       const test = await mergeAvatar(nft, folderPath, sex, type, str);
+      const percentForScale = 100 / 1080 * (width > height ? width : height);
 
       gm(test)
         .transparent('white')
-        .resize(width, height)
+        // .in('-resize', `${width}x${height}`)
+        .in('-scale', `${percentForScale}%`)
+
         .stream('png')
         .pipe(res)
 
