@@ -2,6 +2,8 @@
 const path = require('path');
 const nftHelper = require('../../helpers/dna-parser')
 const gm = require('gm');
+console.log('qweqwe');
+
 
 
 class NFTController {
@@ -21,22 +23,29 @@ class NFTController {
       // 1 - Skinny // 0 - Fat
       // 1 - Wimp // 0 - buff
 
+      console.log('time', new Date().getTime());
       
       const render = type === 'avatar' ? await mergeAvatar(nft) : await mergeItem(nft);
       const percentForScale = 100 / 1080 * (width > height ? width : height);
-
-      gm(render)
+      await new Promise((resolve, reject) => {
+        gm(render)
         .transparent('white')
         // .in('-resize', `${width}x${height}`)
         .in('-scale', `${percentForScale}%`)
         .in(type === 'avatar' ? '-flop' : '')
+        .in('-bordercolor', 'none')
+        .in('-border', '10x100')
+        .stream('png').pipe(res)
+      console.log('time2', new Date().getTime());
 
-        .stream('png')
-        .pipe(res)
-
+      })
     } else {
       res.status(404).json({ error: 'File not found' })
     }
+// 1 ресайз вихідних зображень
+// падінги 
+// зробити глобальні обєекти з картинок shared object
+// маски - 
 
   }
 
