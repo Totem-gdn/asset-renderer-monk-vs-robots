@@ -28,7 +28,7 @@ class NFTController {
       gm(render)
         .transparent('white')
         // .in('-resize', `${width}x${height}`)
-        .in('-scale', `${percentForScale}%`)
+        // .in('-scale', `${percentForScale}%`)
         .in(type === 'avatar' ? '-flop' : '')
 
         .stream('png')
