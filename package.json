@@ -11,6 +11,7 @@
         "debug": "~2.6.9",
         "dotenv": "^16.0.2",
         "express": "~4.16.1",
+        "express-queue": "^0.0.13",
         "gm": "^1.25.0",
         "graphicsmagick": "^0.0.1",
         "imagemagick": "^0.1.3",

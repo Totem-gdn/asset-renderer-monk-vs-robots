@@ -7,7 +7,11 @@ const express     = require('express'),
       server      = require('http').createServer(app),
       bodyParser  = require('body-parser'),
       cors        = require('cors'),
+      queue       = require('express-queue'),
       path        = require('path');
+
+
+app.use(queue({ activeLimit: 2, queuedLimit: -1 }));
 
 app.use(require('morgan')('dev'))
 app.use(bodyParser.urlencoded({ extended: false }))
