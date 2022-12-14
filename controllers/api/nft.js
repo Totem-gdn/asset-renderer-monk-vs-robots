@@ -4,7 +4,7 @@ const nftHelper = require('../../helpers/dna-parser')
 const gm = require('gm');
 const totemCommonFiles = require('totem-common-files')
 
-const sharp = require('sharp');
+const sharp = require('sharp')
 const folderPathAvatar = path.resolve(`resources/avatar/`);
 const folderPathItem = path.resolve(`resources/item/`);
 
@@ -12,7 +12,6 @@ const typesSex = totemCommonFiles.monkVsRobotsAvatarFilterJson.find(elem => elem
 const typesBody = ['ThinMuscular', 'ThinWimp', 'FatMuscular', 'FatWimp'];
 const typesHair = totemCommonFiles.monkVsRobotsAvatarFilterJson.find(elem => elem.id === 'hair_styles').values.map(el => el.key);
 const avatarBuffs = {};
-
 
 function setDataAvatarToBuffer() {
 
@@ -59,6 +58,7 @@ function setDataItemsToBuffer() {
 
 setDataAvatarToBuffer();
 setDataItemsToBuffer();
+
 
 class NFTController {
   async get(req, res, next) {
