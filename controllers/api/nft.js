@@ -1,10 +1,10 @@
 'use strict'
 const path = require('path');
-const nftHelper = require('../../helpers/dna-parser')
+const nftHelper = require('../../helpers/dna-parser');
 const gm = require('gm');
-const totemCommonFiles = require('totem-common-files')
+const totemCommonFiles = require('totem-common-files');
 
-const sharp = require('sharp')
+const sharp = require('sharp');
 const folderPathAvatar = path.resolve(`resources/avatar/`);
 const folderPathItem = path.resolve(`resources/item/`);
 
