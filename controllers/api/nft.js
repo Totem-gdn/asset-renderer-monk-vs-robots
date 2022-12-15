@@ -67,10 +67,13 @@ class NFTController {
     if (!type || !id) {
       res.status(404).json({ error: 'Wrong format' })
     }
+    console.log('start get nft', new Date());
     const nft = await nftHelper.get(type, id);
 
     if (type && nft) {
       res.setHeader('Content-Type', 'image/png');
+    console.log('start render', new Date());
+
       if (type === 'avatar') {
         mergeAvatar(nft, width, height, res)
       } else {
@@ -83,14 +86,24 @@ class NFTController {
 }
 
 function mergeAvatar(nft, width, height, res) {
-  const topBottomPadd = height / 100 * 10;
-  colourMask(avatarBuffs[nft.sex_bio][nft.body_type+nft.body_strength][nft.hair_styles].mask, nft)
-  .toBuffer((err, skinBuff) => {
-    sharp(avatarBuffs[nft.sex_bio][nft.body_type+nft.body_strength][nft.hair_styles].body)
-      .composite([{ input: skinBuff, tile: true, blend: 'multiply' }])
-      .pipe(sharp().resize(+width, +height).extend({top: topBottomPadd, bottom: topBottomPadd, background: 'transparent'}))
-      .pipe(res)
-  })
+  try {
+    const topBottomPadd = height / 100 * 10;
+    colourMask(avatarBuffs[nft.sex_bio][nft.body_type+nft.body_strength][nft.hair_styles].mask, nft)
+    .toBuffer((err, skinBuff) => {
+    console.log('start sharp', new Date());
+      sharp(avatarBuffs[nft.sex_bio][nft.body_type+nft.body_strength][nft.hair_styles].body)
+        .composite([{ input: skinBuff, tile: true, blend: 'multiply' }])
+        .pipe(sharp().resize(+width, +height).extend({top: topBottomPadd, bottom: topBottomPadd, background: 'transparent'}))
+        .toBuffer().then(doneBuff => {
+          console.log('end sharp', new Date());
+          sharp(doneBuff).pipe(res)
+        })
+        
+        
+    })
+  } catch (error) {
+    res.status(500).json({ error: 'Please try again' })
+  }
 }
 
 function colourMask(buffer, nft) {
