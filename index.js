@@ -11,7 +11,7 @@ const express     = require('express'),
       path        = require('path');
 
 
-app.use(queue({ activeLimit: 2, queuedLimit: -1 }));
+app.use(queue({ activeLimit: 1, queuedLimit: -1 }));
 
 app.use(require('morgan')('dev'))
 app.use(bodyParser.urlencoded({ extended: false }))
