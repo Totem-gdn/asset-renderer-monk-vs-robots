@@ -88,17 +88,17 @@ class NFTController {
 function mergeAvatar(nft, width, height, res, id) {
   try {
     const topBottomPadd = height / 100 * 10;
-    // colourMask(avatarBuffs[nft.sex_bio][nft.body_type+nft.body_strength][nft.hair_styles].mask, nft)
-    // .toBuffer((err, skinBuff) => {
+    colourMask(avatarBuffs[nft.sex_bio][nft.body_type+nft.body_strength][nft.hair_styles].mask, nft)
+    .toBuffer((err, skinBuff) => {
     console.log(`start sharp ${id}`, new Date());
       sharp(avatarBuffs[nft.sex_bio][nft.body_type+nft.body_strength][nft.hair_styles].body)
-        .composite([{ input: avatarBuffs[nft.sex_bio][nft.body_type+nft.body_strength][nft.hair_styles].mask, nft, tile: true, blend: 'multiply' }])
+        // .composite([{ input: skinBuff, tile: true, blend: 'multiply' }])
         .pipe(sharp().resize(+width, +height, {fit: 'fill'}).extend({top: topBottomPadd, bottom: topBottomPadd, background: 'transparent'}))
         .toBuffer().then(doneBuff => {
           console.log(`end sharp ${id}`, new Date());
           sharp(doneBuff).pipe(res)
         })
-    // })
+    })
   } catch (error) {
     res.status(500).json({ error: 'Please try again' })
   }
