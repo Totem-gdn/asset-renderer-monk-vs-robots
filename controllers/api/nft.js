@@ -88,9 +88,16 @@ function mergeAvatar(nft, width, height, res) {
     colourMask(avatarBuffs[nft.sex_bio][nft.body_type+nft.body_strength][nft.hair_styles].mask, nft)
     .toBuffer((err, skinBuff) => {
       sharp(avatarBuffs[nft.sex_bio][nft.body_type+nft.body_strength][nft.hair_styles].body)
-        .composite([{ input: skinBuff, tile: true, blend: 'multiply' }])
-        .pipe(sharp().resize(+width, +height).extend({top: topBottomPadd, bottom: topBottomPadd, background: 'transparent'}))
-        .pipe(res)
+      .composite([
+        { input: skinBuff, tile: true, blend: 'multiply' },
+      ])
+      .toBuffer().then((buff) => {
+        sharp(buff).resize(+width, +height, {fit: 'fill'}).extend({top: topBottomPadd, bottom: topBottomPadd, background: 'transparent'})
+        .toBuffer().then((dBuff) => {
+          res.send(dBuff)
+        })
+
+      })
     })
   } catch (error) {
     res.status(500).json({ error: 'Please try again' })
@@ -115,15 +122,18 @@ function colourMask(buffer, nft) {
 function mergeItem(nft, width, height, res) {
   const topBottomPadd = height / 100 * 10;
   try {
-
     gm(itemsBuffs[nft.weapon_material].mask)
       .in('-fill', nft.primary_color)
       .in('-opaque', '#00ff00')
       .toBuffer((err, buff) => {
         sharp(itemsBuffs[nft.weapon_material].spear)
         .composite([{ input: buff, tile: true, blend: 'multiply' }])
-        .pipe(sharp().resize(+width, +height).extend({top: topBottomPadd, bottom: topBottomPadd, background: 'transparent'}))
-        .pipe(res)
+        .toBuffer().then(cBuff => {
+          sharp(cBuff).resize(+width, +height, {fit: 'fill'}).extend({top: topBottomPadd, bottom: topBottomPadd, background: 'transparent'})
+          .toBuffer().then((dBuff) => {
+            res.send(dBuff)
+          })
+        })
       })
   } catch (error) {
     res.status(500).json({ error: 'Please try again' })
