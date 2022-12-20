@@ -92,8 +92,7 @@ function mergeAvatar(nft, width, height, res) {
       .composite([{ input: skinBuff, tile: true, blend: 'multiply' }])
       .toBuffer().then((buff) => {
         sharp(buff).resize(+width, +height, {fit: 'fill'})
-      .extend({top: topBottomPadd, bottom: topBottomPadd, background: 'transparent'})
-        .pipe(sharp().extend({left: leftRightPadd, right: leftRightPadd, background: '#2a2d3303' }))
+      .extend({top: topBottomPadd, bottom: topBottomPadd,left: leftRightPadd, right: leftRightPadd, background: 'transparent'})
         .toBuffer().then((dBuff) => {
           res.send(dBuff)
         })
@@ -132,8 +131,7 @@ function mergeItem(nft, width, height, res) {
         .composite([{ input: buff, tile: true, blend: 'multiply' }])
         .toBuffer().then(cBuff => {
           sharp(cBuff).resize(+width, +height, {fit: 'fill'})
-          .extend({top: topBottomPadd, bottom: topBottomPadd, background: 'transparent'})
-          .pipe(sharp().extend({left: leftRightPadd, right: leftRightPadd, background: '#2a2d3303' }))
+          .extend({top: topBottomPadd, bottom: topBottomPadd,left: leftRightPadd, right: leftRightPadd, background: 'transparent'})
           .toBuffer().then((dBuff) => {
             res.send(dBuff)
           })
