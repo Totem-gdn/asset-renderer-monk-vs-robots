@@ -85,13 +85,16 @@ class NFTController {
 function mergeAvatar(nft, width, height, res) {
   try {
     const topBottomPadd = height / 100 * 10;
-    const leftRightPadd = width / 100 * 20;
+    const leftRightPadd = width / 100 * 15;
     colourMask(avatarBuffs[nft.sex_bio][nft.body_type+nft.body_strength][nft.hair_styles].mask, nft)
     .toBuffer((err, skinBuff) => {
       sharp(avatarBuffs[nft.sex_bio][nft.body_type+nft.body_strength][nft.hair_styles].body)
       .composite([{ input: skinBuff, tile: true, blend: 'multiply' }])
       .toBuffer().then((buff) => {
-        sharp(buff).resize(+width, +height, {fit: 'fill'})
+        sharp(buff).resize(+width - leftRightPadd * 2, +height - topBottomPadd * 2, {
+          fit: 'contain',
+          background: 'transparent'
+        })
       .extend({top: topBottomPadd, bottom: topBottomPadd,left: leftRightPadd, right: leftRightPadd, background: 'transparent'})
         .toBuffer().then((dBuff) => {
           res.send(dBuff)
@@ -122,7 +125,7 @@ function colourMask(buffer, nft) {
 function mergeItem(nft, width, height, res) {
   try {
     const topBottomPadd = height / 100 * 10;
-    const leftRightPadd = width / 100 * 20;
+    const leftRightPadd = width / 100 * 15;
     gm(itemsBuffs[nft.weapon_material].mask)
       .in('-fill', nft.primary_color)
       .in('-opaque', '#00ff00')
@@ -130,7 +133,10 @@ function mergeItem(nft, width, height, res) {
         sharp(itemsBuffs[nft.weapon_material].spear)
         .composite([{ input: buff, tile: true, blend: 'multiply' }])
         .toBuffer().then(cBuff => {
-          sharp(cBuff).resize(+width, +height, {fit: 'fill'})
+          sharp(cBuff).resize(+width - leftRightPadd * 2, +height - topBottomPadd * 2, {
+            fit: 'contain',
+            background: 'transparent'
+          })
           .extend({top: topBottomPadd, bottom: topBottomPadd,left: leftRightPadd, right: leftRightPadd, background: 'transparent'})
           .toBuffer().then((dBuff) => {
             res.send(dBuff)
