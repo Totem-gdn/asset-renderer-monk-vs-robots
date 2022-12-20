@@ -1,8 +1,8 @@
 'use strict'
 const path = require('path');
-const nftHelper = require('../../helpers/dna-parser')
+const nftHelper = require('../../helpers/dna-parser');
 const gm = require('gm');
-const totemCommonFiles = require('totem-common-files')
+const totemCommonFiles = require('totem-common-files');
 
 const sharp = require('sharp');
 const folderPathAvatar = path.resolve(`resources/avatar/`);
@@ -12,7 +12,6 @@ const typesSex = totemCommonFiles.monkVsRobotsAvatarFilterJson.find(elem => elem
 const typesBody = ['ThinMuscular', 'ThinWimp', 'FatMuscular', 'FatWimp'];
 const typesHair = totemCommonFiles.monkVsRobotsAvatarFilterJson.find(elem => elem.id === 'hair_styles').values.map(el => el.key);
 const avatarBuffs = {};
-
 
 function setDataAvatarToBuffer() {
 
@@ -59,6 +58,7 @@ setDataAvatarToBuffer();
 
 setDataItemsToBuffer();
 
+
 class NFTController {
   async get(req, res, next) {
     const { type, id } = req.params
@@ -67,15 +67,12 @@ class NFTController {
     if (!type || !id) {
       res.status(404).json({ error: 'Wrong format' })
     }
-    console.log(`start get nft ${id}`, new Date());
     const nft = await nftHelper.get(type, id);
 
     if (type && nft) {
       res.setHeader('Content-Type', 'image/png');
-    console.log(`start render ${id}`, new Date());
-
       if (type === 'avatar') {
-        mergeAvatar(nft, width, height, res, id)
+        mergeAvatar(nft, width, height, res)
       } else {
         mergeItem(nft, width, height, res)
       }
@@ -85,19 +82,22 @@ class NFTController {
   }
 }
 
-function mergeAvatar(nft, width, height, res, id) {
+function mergeAvatar(nft, width, height, res) {
   try {
     const topBottomPadd = height / 100 * 10;
     colourMask(avatarBuffs[nft.sex_bio][nft.body_type+nft.body_strength][nft.hair_styles].mask, nft)
     .toBuffer((err, skinBuff) => {
-    console.log(`start sharp ${id}`, new Date());
       sharp(avatarBuffs[nft.sex_bio][nft.body_type+nft.body_strength][nft.hair_styles].body)
-        // .composite([{ input: skinBuff, tile: true, blend: 'multiply' }])
-        .pipe(sharp().resize(+width, +height, {fit: 'fill'}).extend({top: topBottomPadd, bottom: topBottomPadd, background: 'transparent'}))
-        .toBuffer().then(doneBuff => {
-          console.log(`end sharp ${id}`, new Date());
-          sharp(doneBuff).pipe(res)
+      .composite([
+        { input: skinBuff, tile: true, blend: 'multiply' },
+      ])
+      .toBuffer().then((buff) => {
+        sharp(buff).resize(+width, +height, {fit: 'fill'}).extend({top: topBottomPadd, bottom: topBottomPadd, background: 'transparent'})
+        .toBuffer().then((dBuff) => {
+          res.send(dBuff)
         })
+
+      })
     })
   } catch (error) {
     res.status(500).json({ error: 'Please try again' })
@@ -121,14 +121,22 @@ function colourMask(buffer, nft) {
 
 function mergeItem(nft, width, height, res) {
   const topBottomPadd = height / 100 * 10;
-  gm(itemsBuffs[nft.weapon_material].mask)
-    .in('-fill', nft.primary_color)
-    .in('-opaque', '#00ff00')
-    .toBuffer((err, buff) => {
-      sharp(itemsBuffs[nft.weapon_material].spear)
-      .composite([{ input: buff, tile: true, blend: 'multiply' }])
-      .pipe(sharp().resize(+width, +height).extend({top: topBottomPadd, bottom: topBottomPadd, background: 'transparent'}))
-      .pipe(res)
-    })
+  try {
+    gm(itemsBuffs[nft.weapon_material].mask)
+      .in('-fill', nft.primary_color)
+      .in('-opaque', '#00ff00')
+      .toBuffer((err, buff) => {
+        sharp(itemsBuffs[nft.weapon_material].spear)
+        .composite([{ input: buff, tile: true, blend: 'multiply' }])
+        .toBuffer().then(cBuff => {
+          sharp(cBuff).resize(+width, +height, {fit: 'fill'}).extend({top: topBottomPadd, bottom: topBottomPadd, background: 'transparent'})
+          .toBuffer().then((dBuff) => {
+            res.send(dBuff)
+          })
+        })
+      })
+  } catch (error) {
+    res.status(500).json({ error: 'Please try again' })
+  }
 }
 module.exports = new NFTController()
