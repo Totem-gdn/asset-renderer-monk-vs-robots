@@ -84,8 +84,8 @@ class NFTController {
 
 function mergeAvatar(nft, width, height, res) {
   try {
-    const topBottomPadd = height / 100 * 10;
-    const leftRightPadd = width / 100 * 15;
+    const topBottomPadd = Math.round(height / 100 * 10);
+    const leftRightPadd = Math.round(width / 100 * 15);
     colourMask(avatarBuffs[nft.sex_bio][nft.body_type+nft.body_strength][nft.hair_styles].mask, nft)
     .toBuffer((err, skinBuff) => {
       sharp(avatarBuffs[nft.sex_bio][nft.body_type+nft.body_strength][nft.hair_styles].body)
@@ -124,8 +124,8 @@ function colourMask(buffer, nft) {
 
 function mergeItem(nft, width, height, res) {
   try {
-    const topBottomPadd = height / 100 * 10;
-    const leftRightPadd = width / 100 * 15;
+    const topBottomPadd = Math.round(height / 100 * 10);
+    const leftRightPadd = Math.round(width / 100 * 15);
     gm(itemsBuffs[nft.weapon_material].mask)
       .in('-fill', nft.primary_color)
       .in('-opaque', '#00ff00')
