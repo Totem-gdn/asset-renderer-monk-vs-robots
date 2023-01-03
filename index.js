@@ -7,22 +7,17 @@ const express     = require('express'),
       server      = require('http').createServer(app),
       bodyParser  = require('body-parser'),
       cors        = require('cors'),
+      queue       = require('express-queue'),
       path        = require('path');
+
+
+app.use(queue({ activeLimit: 1, queuedLimit: -1 }));
 
 app.use(require('morgan')('dev'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(cors())
 
-
-let handlebars = require('express-handlebars').create({
-  layoutsDir: path.join(__dirname, "views/layouts"),
-  extname: 'hbs',
-  helpers: require('./helpers/handlebars-helpers') //only need this
-});
-
-app.engine('hbs', handlebars.engine);
-app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, "views"));
 
 

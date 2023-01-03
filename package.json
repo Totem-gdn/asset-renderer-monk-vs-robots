@@ -11,10 +11,13 @@
         "debug": "~2.6.9",
         "dotenv": "^16.0.2",
         "express": "~4.16.1",
-        "express-handlebars": "^6.0.6",
         "express-queue": "^0.0.13",
+        "gm": "^1.25.0",
+        "graphicsmagick": "^0.0.1",
+        "imagemagick": "^0.1.3",
         "morgan": "~1.9.1",
         "nodemon": "^2.0.19",
+        "sharp": "^0.31.0",
         "totem-dna-parser": "github:Totem-gdn/totem-dna-parser"
     }
 }
