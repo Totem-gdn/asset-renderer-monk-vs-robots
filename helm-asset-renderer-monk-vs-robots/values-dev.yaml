@@ -32,7 +32,7 @@ ingress:
         - path: /
           pathType: Prefix
           backend:
-            serviceName: asset-renderer-dreadstone-keep-dev
+            serviceName: asset-renderer-monk-vs-robots-dev
             servicePort: 80
   tls: []
 
@@ -54,7 +54,7 @@ autoscaling:
 tolerations:
   - key: "dedicated"
     operator: "Equal"
-    value: "core"
+    value: "third"
     effect: "NoSchedule"
 
 env:
