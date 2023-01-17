@@ -5,7 +5,6 @@ const gm = require('gm');
 const totemCommonFiles = require('totem-common-files');
 
 const sharp = require('sharp');
-const jimp = require('jimp');
 const folderPathAvatar = path.resolve(`resources/avatar/`);
 const folderPathItem = path.resolve(`resources/item/`);
 
@@ -44,10 +43,8 @@ function setDataItemsToBuffer() {
 
   for (const weapon of typesWeapon) {
     Promise.all([
-      jimp.read(`${folderPathItem}/${weapon}/${weapon}_Spears.png`),
-      jimp.read(`${folderPathItem}/${weapon}/${weapon}_Crystal_Mask.jpeg`)
-      // sharp(`${folderPathItem}/${weapon}/${weapon}_Spears.png`).toBuffer(),
-      // sharp(`${folderPathItem}/${weapon}/${weapon}_Crystal_Mask.png`).toBuffer(),
+      sharp(`${folderPathItem}/${weapon}/${weapon}_Spears.png`).toBuffer(),
+      sharp(`${folderPathItem}/${weapon}/${weapon}_Crystal_Mask.png`).toBuffer(),
     ]).then(values => {
       itemsBuffs[weapon] = {
         spear: values[0],
@@ -87,7 +84,6 @@ class NFTController {
 
 function mergeAvatar(nft, width, height, res) {
   try {
-
     const topBottomPadd = height / 100 * 10;
     const leftRightPadd = width / 100 * 15;
     colourMask(avatarBuffs[nft.sex_bio][nft.body_type+nft.body_strength][nft.hair_styles].mask, nft)
@@ -126,54 +122,27 @@ function colourMask(buffer, nft) {
         .in('-opaque', '#ffff00')
 }
 
-async function mergeItem(nft, width, height, res) {
+function mergeItem(nft, width, height, res) {
   try {
     const topBottomPadd = height / 100 * 10;
     const leftRightPadd = width / 100 * 15;
-    // const testImg = new jimp(width, height);
-    // const main = await jimp.read(`${folderPathItem}/Bone/Bone_Spears.png`);
-
-    // jimp.read(`${folderPathItem}/Bone/Bone_Crystal_Mask.jpeg`, (error, mask) => {
-      // jimp.read(`${folderPathItem}/Bone/Bone_Spears.jpeg`, async (error, item) => {
-        console.log('nft', nft);
-        const mask = itemsBuffs[nft.weapon_material].mask.clone();
-        const item = itemsBuffs[nft.weapon_material].spear;
-        mask.color([{ apply: 'xor', params: [nft.primary_color] }]);
-        mask.composite(item, 0, 0, {mode: 'overlay'})
-        .resize(+width, +height).getBase64Async(mask.getMIME()).then(base64 => {
-          base64 = base64.replace(/^data:image\/(png|jpeg|jpg);base64,/, '');
-          let img = Buffer.from(base64, 'base64');
-          res.send(img)
+    gm(itemsBuffs[nft.weapon_material].mask)
+      .in('-fill', nft.primary_color)
+      .in('-opaque', '#00ff00')
+      .toBuffer((err, buff) => {
+        sharp(itemsBuffs[nft.weapon_material].spear)
+        .composite([{ input: buff, tile: true, blend: 'multiply' }])
+        .toBuffer().then(cBuff => {
+          sharp(cBuff).resize(+width - leftRightPadd * 2, +height - topBottomPadd * 2, {
+            fit: 'contain',
+            background: 'transparent'
+          })
+          .extend({top: topBottomPadd, bottom: topBottomPadd,left: leftRightPadd, right: leftRightPadd, background: 'transparent'})
+          .toBuffer().then((dBuff) => {
+            res.send(dBuff)
+          })
         })
-
-      // })
-      // mask
-    // .resize(256, 256) // resize
-    // .composite(`${folderPathItem}/Bone/Bone_Spears.png`)
-   
-    // .write(`${folderPathItem}/test.png`); 
-   
-    // });
-
-
-
-    // gm(itemsBuffs[nft.weapon_material].mask)
-    //   .in('-fill', nft.primary_color)
-    //   .in('-opaque', '#00ff00')
-    //   .toBuffer((err, buff) => {
-    //     sharp(itemsBuffs[nft.weapon_material].spear)
-    //     .composite([{ input: buff, tile: true, blend: 'multiply' }])
-    //     .toBuffer().then(cBuff => {
-    //       sharp(cBuff).resize(+width - leftRightPadd * 2, +height - topBottomPadd * 2, {
-    //         fit: 'contain',
-    //         background: 'transparent'
-    //       })
-    //       .extend({top: topBottomPadd, bottom: topBottomPadd,left: leftRightPadd, right: leftRightPadd, background: 'transparent'})
-    //       .toBuffer().then((dBuff) => {
-    //         res.send(dBuff)
-    //       })
-    //     })
-    //   })
+      })
   } catch (error) {
     res.status(500).json({ error: 'Please try again' })
   }
