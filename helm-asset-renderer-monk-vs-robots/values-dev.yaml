@@ -20,10 +20,11 @@ ingress:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/success-codes: '404'
     alb.ingress.kubernetes.io/group.name: main
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:667950714614:certificate/aa68bfac-fe5d-4b63-972e-91aa3e12a669
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:667950714614:certificate/e3ca48cc-c14e-434f-88ec-52310f97cfbc
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80},{"HTTPS": 443}]'
     alb.ingress.kubernetes.io/ssl-redirect: '443'
     alb.ingress.kubernetes.io/scheme: internet-facing
+    external-dns.alpha.kubernetes.io/ingress-hostname-source: annotation-only
   hosts:
     - host: test-dev-asset-renderer-monk-vs-robots.totem-explorer.com
       paths:
