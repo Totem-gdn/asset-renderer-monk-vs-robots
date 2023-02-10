@@ -4,7 +4,12 @@
 		mix-blend-mode: multiply;
 	}
 </style>
-    <g style="filter: drop-shadow(0px 0px 150px {{glow_color}});" transform="translate(170, 170)">
+    {{#ifeq glow 'true'}}
+        <g style="filter: drop-shadow(0px 0px 150px {{glow_color}});" transform="translate(170, 170)">
+    {{/ifeq}}
+    {{#ifeq glow 'false'}}
+        <g transform="translate(170, 170)">
+    {{/ifeq}}
         <g>
 
             {{#ifeq hair_styles 'Afro'}}
