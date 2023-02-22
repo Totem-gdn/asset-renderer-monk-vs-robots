@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: 667950714614.dkr.ecr.us-east-1.amazonaws.com/asset-renderer-monk-vs-robots
+  repository: 667950714614.dkr.ecr.us-east-2.amazonaws.com/asset-renderer-monk-vs-robots
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "prod"
@@ -31,7 +31,7 @@ ingress:
     alb.ingress.kubernetes.io/scheme: internet-facing
     external-dns.alpha.kubernetes.io/ingress-hostname-source: annotation-only
   hosts:
-    - host: test-asset-renderer-monk-vs-robots.totem-explorer.com
+    - host: asset-renderer-monk-vs-robots.totem-explorer.com
       paths:
         - path: /
           pathType: Prefix
@@ -63,12 +63,7 @@ tolerations:
     effect: "NoSchedule"
 
 env:
-   host: ""
-   port: ""
-   API_URL: ""
-   AVATAR_CONTRACT: ""
-   GEM_CONTRACT: ""
-   ITEM_CONTRACT: ""
+  ENV: ""
 
 
 
