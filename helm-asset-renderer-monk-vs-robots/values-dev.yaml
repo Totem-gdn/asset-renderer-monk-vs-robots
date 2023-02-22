@@ -26,7 +26,7 @@ ingress:
     alb.ingress.kubernetes.io/scheme: internet-facing
     external-dns.alpha.kubernetes.io/ingress-hostname-source: annotation-only
   hosts:
-    - host: test-dev-asset-renderer-monk-vs-robots.totem-explorer.com
+    - host: dev-asset-renderer-monk-vs-robots.totem-explorer.com
       paths:
         - path: /
           pathType: Prefix
@@ -58,10 +58,5 @@ tolerations:
     effect: "NoSchedule"
 
 env:
-   host: ""
-   port: ""
-   API_URL: ""
-   AVATAR_CONTRACT: ""
-   GEM_CONTRACT: ""
-   ITEM_CONTRACT: ""
+   ENV: ""
 
