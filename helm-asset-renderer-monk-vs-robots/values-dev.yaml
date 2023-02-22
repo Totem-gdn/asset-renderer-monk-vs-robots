@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: 667950714614.dkr.ecr.us-east-1.amazonaws.com/asset-renderer-monk-vs-robots
+  repository: 667950714614.dkr.ecr.us-east-2.amazonaws.com/asset-renderer-monk-vs-robots
   pullPolicy: Always
   tag: "dev"
 
